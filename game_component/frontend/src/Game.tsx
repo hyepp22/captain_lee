@@ -163,12 +163,12 @@ export default function Game({ data }: { data: GameData }) {
   };
 
   const touchDirection = (direction: Direction) => ({
-    onPointerDown: (event: React.PointerEvent<HTMLButtonElement>) => {
+    onPointerDown: (event: PointerEvent<HTMLButtonElement>) => {
       event.preventDefault();
       event.currentTarget.setPointerCapture(event.pointerId);
       directions.current[direction] = true;
     },
-    onPointerUp: (event: React.PointerEvent<HTMLButtonElement>) => {
+    onPointerUp: (event: PointerEvent<HTMLButtonElement>) => {
       event.preventDefault();
       directions.current[direction] = false;
     },
@@ -222,7 +222,7 @@ export default function Game({ data }: { data: GameData }) {
             width={WIDTH}
             height={HEIGHT}
             aria-label="문학 탐험 지도"
-            {(event) => {
+            onClick={(event) => {
               const bounds = event.currentTarget.getBoundingClientRect();
               const x = (event.clientX - bounds.left) * WIDTH / bounds.width;
               const y = (event.clientY - bounds.top) * HEIGHT / bounds.height;
@@ -247,7 +247,7 @@ export default function Game({ data }: { data: GameData }) {
               : "사물 가까이 이동하세요"}</strong>
             <button
               disabled={!nearbyObject || Boolean(question) || waiting}
-              {() => nearbyObject && openObject(nearbyObject)}
+              onClick={() => nearbyObject && openObject(nearbyObject)}
             >
               조사하기
             </button>
@@ -267,7 +267,7 @@ export default function Game({ data }: { data: GameData }) {
           <button
             className="finish"
             disabled={waiting}
-            {() => send("game_complete", {})}
+            onClick={() => send("game_complete", {})}
           >
             탐험 마치고 성찰하기
           </button>
@@ -283,7 +283,7 @@ export default function Game({ data }: { data: GameData }) {
               <textarea
                 value={reflection[index]}
                 maxLength={1500}
-                {(event) => setReflection((previous) => {
+                onChange={(event) => setReflection((previous) => {
                   const next = [...previous];
                   next[index] = event.target.value;
                   return next;
@@ -295,7 +295,7 @@ export default function Game({ data }: { data: GameData }) {
             disabled={waiting || reflection.some(
               (value) => !value.trim()
             )}
-            {() => send("reflection_submit", { answers: reflection })}
+            onClick={() => send("reflection_submit", { answers: reflection })}
           >
             성찰 저장하고 결과 보기
           </button>
@@ -320,7 +320,7 @@ export default function Game({ data }: { data: GameData }) {
                       aria-label="답안"
                       maxLength={1200}
                       value={typeof answer === "string" ? answer : ""}
-                      {(event) => setAnswer(event.target.value)}
+                      onChange={(event) => setAnswer(event.target.value)}
                     />
                   : Object.entries(question.options).map(([letter, text]) =>
                       <label className="option" key={letter}>
@@ -331,7 +331,7 @@ export default function Game({ data }: { data: GameData }) {
                           checked={Array.isArray(answer)
                             ? answer.includes(letter)
                             : answer === letter}
-                          {() => {
+                          onChange={() => {
                             if (question.question_type === "multiple_choice") {
                               const previous = Array.isArray(answer) ? answer : [];
                               setAnswer(previous.includes(letter)
@@ -349,7 +349,7 @@ export default function Game({ data }: { data: GameData }) {
                 <div className="modal-actions">
                   <button
                     disabled={waiting}
-                    {() => send("request_hint", {
+                    onClick={() => send("request_hint", {
                       question_id: question.question_id
                     })}
                   >
@@ -360,7 +360,7 @@ export default function Game({ data }: { data: GameData }) {
                       waiting ||
                       (Array.isArray(answer) ? answer.length === 0 : !answer.trim())
                     }
-                    {submit}
+                    onClick={submit}
                   >
                     답안 제출
                   </button>
@@ -378,7 +378,7 @@ export default function Game({ data }: { data: GameData }) {
                   <p className="warning">시트 저장을 확인하지 못했습니다.</p>}
               </div>
             }
-            <button {closeQuestion}>지도로 돌아가기</button>
+            <button onClick={closeQuestion}>지도로 돌아가기</button>
           </section>
         </div>
       }
