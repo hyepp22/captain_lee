@@ -6,6 +6,7 @@ import { useKeyboard } from "./controls";
 import type {
   Direction, Directions, GameData, GameObject, Question, Result
 } from "./types";
+import type { PointerEvent } from "react";
 
 function savedPosition(sessionId: string): Position {
   try {
