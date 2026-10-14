@@ -20,5 +20,5 @@ function onRender(event: Event): void {
   Streamlit.setFrameHeight();
 }
 
-Streamlit.events.addEventListener(Streamlit.RENDER_EVENT, onRender);
+Streamlit.events.addEventListener(Streamlit.RENDER_EVENT, (event) => onRender(event as unknown as Event));
 Streamlit.setComponentReady();
